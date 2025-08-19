@@ -7,6 +7,10 @@ from typing import List, Optional, Dict
 import tempfile
 import uuid
 from datetime import datetime
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 from .services.interview_service import InterviewService
 
@@ -25,11 +29,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize service
+# Initialize service with better error handling
+interview_service = None
 try:
-    interview_service = InterviewService()
+    # Check if API key is available
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        print("❌ Warning: OPENAI_API_KEY environment variable is not set.")
+        print("Please check your .env file or set the environment variable.")
+    else:
+        print("✅ OpenAI API key found, initializing service...")
+        interview_service = InterviewService()
+        print("✅ Interview service initialized successfully")
+        
 except ValueError as e:
     print(f"❌ Error initializing service: {e}")
+    interview_service = None
+except Exception as e:
+    print(f"❌ Unexpected error during service initialization: {e}")
     interview_service = None
 
 # In-memory session storage (use Redis/Database in production)
@@ -61,10 +78,15 @@ async def root():
 
 @app.get("/health")
 async def health_check():
+    api_key_configured = bool(os.getenv("OPENAI_API_KEY"))
+    service_ready = interview_service is not None
+    
     return {
-        "status": "healthy",
+        "status": "healthy" if service_ready else "degraded",
         "service": "Mock Interview API",
-        "openai_configured": bool(os.getenv("OPENAI_API_KEY"))
+        "openai_configured": api_key_configured,
+        "service_ready": service_ready,
+        "message": "Service ready" if service_ready else "OpenAI API key not configured or service initialization failed"
     }
 
 @app.post("/generate-questions")

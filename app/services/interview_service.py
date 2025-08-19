@@ -8,11 +8,24 @@ class InterviewService:
     def __init__(self):
         self.openai_key = os.getenv("OPENAI_API_KEY")
         if not self.openai_key:
-            raise ValueError("OPENAI_API_KEY environment variable is required")
+            raise ValueError(
+                "OPENAI_API_KEY environment variable is required. "
+                "Please check your .env file or set the environment variable."
+            )
         
-        self.client_chat = OpenAI(api_key=self.openai_key)
-        self.client_whisper = OpenAI(api_key=self.openai_key)
-        self.client_tts = OpenAI(api_key=self.openai_key)
+        # Strip any quotes or whitespace that might be in the key
+        self.openai_key = self.openai_key.strip().strip('"').strip("'")
+        
+        try:
+            print(f"🔧 Initializing OpenAI clients...")
+            self.client_chat = OpenAI(api_key=self.openai_key)
+            self.client_whisper = OpenAI(api_key=self.openai_key)
+            self.client_tts = OpenAI(api_key=self.openai_key)
+            print("✅ OpenAI clients initialized successfully")
+            
+        except Exception as e:
+            print(f"❌ Error initializing OpenAI clients: {e}")
+            raise ValueError(f"Failed to initialize OpenAI clients: {e}")
 
     def chat_completion(self, messages, model="gpt-4o-mini"):
         response = self.client_chat.chat.completions.create(
