@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 from openai import OpenAI
 import sounddevice as sd
 import numpy as np
@@ -6,12 +7,24 @@ import soundfile as sf
 import tempfile
 import time
 
+# Load environment variables from .env file
+load_dotenv()
+
 # ===============================
 # CONFIGURATION – SINGLE KEY FROM ENVIRONMENT VARIABLE
 # ===============================
 
-
 OPENAI_KEY = os.getenv("OPENAI_API_KEY")
+
+# Check if API key is available
+if not OPENAI_KEY:
+    print("❌ Error: OPENAI_API_KEY environment variable is not set.")
+    print("Please set it in your .env file or export it in your shell.")
+    print("Example: export OPENAI_API_KEY='your-api-key-here'")
+    print("\n💡 Make sure your .env file is in the same directory as this script.")
+    exit(1)
+
+print("✅ OpenAI API key loaded successfully")
 
 client_chat = OpenAI(api_key=OPENAI_KEY)
 client_whisper = OpenAI(api_key=OPENAI_KEY)
@@ -52,7 +65,7 @@ def speak_text_tts(text):
     temp_out.close()
 
     with client_tts.audio.speech.with_streaming_response.create(
-        model="gpt-4o-mini-tts",
+        model="tts-1",  # Updated model name
         voice="alloy",
         input=text
     ) as response:
@@ -96,6 +109,9 @@ def generate_questions(topic, difficulty, num_questions=10):
 # MAIN INTERVIEW FLOW
 # ===============================
 if __name__ == "__main__":
+    print("🚀 Starting Mock Interview CLI Application")
+    print("=" * 50)
+    
     difficulty = "simple"  # simple / medium / hard
     topic = "Computer networks"
     num_questions = 2
