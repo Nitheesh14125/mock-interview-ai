@@ -113,8 +113,8 @@ if __name__ == "__main__":
     print("=" * 50)
     
     difficulty = "simple"  # simple / medium / hard
-    topic = "Computer networks"
-    num_questions = 2
+    topic = "Photo editing and canva desiging"
+    num_questions = 3
 
     full_session_log = ""
     student_answers = []

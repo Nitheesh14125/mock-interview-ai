@@ -1,0 +1,16 @@
+<form action="/questions" method="post">
+  <label>Topic:</label>
+  <input type="text" name="topic" required>
+
+  <label>Difficulty:</label>
+  <select name="difficulty">
+    <option value="simple">Simple</option>
+    <option value="medium">Medium</option>
+    <option value="hard">Hard</option>
+  </select>
+
+  <label>Number of Questions:</label>
+  <input type="number" name="num_questions" min="1" max="10" value="3">
+
+  <button type="submit">Generate Questions</button>
+</form>

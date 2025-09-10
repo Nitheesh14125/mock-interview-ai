@@ -1,0 +1,9 @@
+<h2>Interview Results</h2>
+<ul>
+  {% for q, ans, fb in feedback %}
+    <li><b>{{ q }}</b> - {{ ans }} → <span>{{ fb }}</span></li>
+  {% endfor %}
+</ul>
+
+<h3>Great job! Keep practicing 🎉</h3>
+<a href="{{ url_for('home') }}"><button>Go Home</button></a>

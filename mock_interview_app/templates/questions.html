@@ -1,0 +1,8 @@
+{% set question = questions[q_index] %}
+<h2>Question {{ q_index+1 }}: {{ question }}</h2>
+
+<form action="/submit_answer" method="post">
+  <input type="hidden" name="q_index" value="{{ q_index }}">
+  <textarea name="answer" required></textarea>
+  <button type="submit">Next</button>
+</form>
