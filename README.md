@@ -389,3 +389,4 @@ This project is licensed under the MIT License.
 **Need help?** Check the troubleshooting section or create an issue in the repository.
 
 **Happy interviewing! 🎤✨**
+# mock-interview-ai
